@@ -13,5 +13,14 @@ pipeline {
       }
     }
 
+    stage('Test') {
+      environment {
+        CI = 'testing'
+      }
+      steps {
+        sh 'echo "Testing"'
+      }
+    }
+
   }
 }
