@@ -29,8 +29,8 @@ pipeline {
 set -euo pipefail
 
 echo "Cloning"
-git clone https://github.com/ankitjain28may/npm-github-actions.git
-cd npm-github-actions
+git clone https://github.com/ankitjain28may/scraping-nodejs.git
+cd scraping-nodejs
 npm install
 tree -L 4
 
