@@ -24,9 +24,12 @@ pipeline {
 
     stage('Deliver') {
       steps {
-        sh '''tee deliver.sh <<EOF
+        sh '''apt-get update && apt-get install tree -y
+
+tee deliver.sh <<EOF
 #!/bin/bash
 set -euo pipefail
+
 
 echo "Cloning"
 git clone https://github.com/ankitjain28may/scraping-nodejs.git
