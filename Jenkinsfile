@@ -24,8 +24,10 @@ pipeline {
     }
 
     stage('Deliver') {
-      steps {
-        sh '''
+      parallel {
+        stage('Deliver') {
+          steps {
+            sh '''
 apt-get update -y &&  apt-get install tree -y
 tree -L 4
 tee deliver.sh <<EOF
@@ -57,7 +59,41 @@ echo "Running kill.sh"
 chmod +x kill.sh
 ./kill.sh
 '''
-        input '(Click "Proceed" to continue)'
+            input '(Click "Proceed" to continue)'
+          }
+        }
+
+        stage('Prod') {
+          steps {
+            sh '''tee deliver.sh <<EOF
+#!/bin/bash
+set -euo pipefail
+
+echo "Cloning"
+https://github.com/ankitjain28may/sqs-autoscaler-controller.git -b k8s-v1.16
+cd sqs-autoscaler-controller
+docker build -t sqs-autoscaler-controller .
+docker images
+
+EOF
+
+
+chmod +x deliver.sh
+./deliver.sh'''
+            sh '''tee kill.sh <<EOF
+#!/bin/bash
+set -euo pipefail
+
+rm -rf sqs-autoscaler-controller
+docker images
+
+EOF
+
+chmod +x kill.sh
+./kill.sh'''
+          }
+        }
+
       }
     }
 
