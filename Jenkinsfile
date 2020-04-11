@@ -40,7 +40,7 @@ cd sqs-autoscaler-controller
 echo "######Dockerfile#######"
 cat Dockerfile
 
-sed "s/FROM scratch/ADD https:\\/\\/get.aquasec.com\\/microscanner .\\\\\\nRUN chmod +x microscanner\\\\\\nRUN .\\/microscanner ZTc0NTkyMTVkY2Ux\\\\\\nFROM scratch/" ./Dockerfile
+sed -i "s/FROM scratch/ADD https:\\/\\/get.aquasec.com\\/microscanner .\\\\\\nRUN chmod +x microscanner\\\\\\nRUN .\\/microscanner ZTc0NTkyMTVkY2Ux\\\\\\nFROM scratch/" ./Dockerfile
 
 echo "######Dockerfile#######"
 cat Dockerfile
