@@ -24,12 +24,11 @@ pipeline {
 
     stage('Deliver') {
       steps {
-        sh '''apt-get update && apt-get install tree -y
+        sh '''apt-get update -y && apt-get install tree -y
 
 tee deliver.sh <<EOF
 #!/bin/bash
 set -euo pipefail
-
 
 echo "Cloning"
 git clone https://github.com/ankitjain28may/scraping-nodejs.git
@@ -37,11 +36,25 @@ cd scraping-nodejs
 npm install
 tree -L 4
 
-
 EOF
 
+echo "Running deliver.sh"
+
 chmod +x deliver.sh
-./deliver.sh'''
+./deliver.sh
+
+tee kill.sh <<EOF
+#!/bin/bash
+set -euo pipefail
+pwd
+rm -rf scraping-nodejs
+EOF
+
+echo "Running kill.sh"
+
+chmod +x kill.sh
+./kill.sh
+'''
         input '(Click "Proceed" to continue)'
       }
     }
