@@ -22,5 +22,26 @@ pipeline {
       }
     }
 
+    stage('Deliver') {
+      steps {
+        sh '''tee deliver.sh <<EOF
+#!/bin/bash
+set -euo pipefail
+
+echo "Cloning"
+git clone https://github.com/ankitjain28may/npm-github-actions.git
+cd npm-github-actions
+npm install
+tree -L 4
+
+
+EOF
+
+chmod +x deliver.sh
+./deliver.sh'''
+        input '(Click "Proceed" to continue)'
+      }
+    }
+
   }
 }
