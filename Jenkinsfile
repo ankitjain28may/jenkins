@@ -26,7 +26,7 @@ pipeline {
     stage('Deliver') {
       steps {
         sh '''
-apk update -y &&  apk add tree -y
+apt-get update -y &&  apt-get install tree -y
 tree -L 4
 tee deliver.sh <<EOF
 #!/bin/bash
