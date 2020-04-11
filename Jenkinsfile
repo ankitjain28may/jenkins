@@ -38,18 +38,13 @@ pipeline {
 git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git
 cd sqs-autoscaler-controller
 echo "######Dockerfile#######"
-cat Dockerfile
-
-sed -i "s/FROM scratch/ADD https:\\/\\/get.aquasec.com\\/microscanner .\\\\\\nRUN chmod +x microscanner\\\\\\nRUN .\\/microscanner ZTc0NTkyMTVkY2Ux\\\\\\nFROM scratch/" ./Dockerfile
-
-echo "######Dockerfile#######"
-cat Dockerfile
 
 docker build -t sqs-autoscaler-controller .
 
 docker images
 
 docker run -d sqs-autoscaler-controller:latest "--help"'''
+            aquaMicroscanner(imageName: 'sqs-autoscaler-controller', outputFormat: 'json', notCompliesCmd: 'exit 1', onDisallowed: 'fail')
             sh '''rm -rf sqs-autoscaler-controller
 '''
           }
