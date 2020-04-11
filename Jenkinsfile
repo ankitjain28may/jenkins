@@ -2,8 +2,15 @@ pipeline {
   agent any
   stages {
     stage('Build') {
+      agent {
+        docker {
+          image 'node:latest'
+          args '-p 3000:3000'
+        }
+
+      }
       steps {
-        sh 'npm install'
+        sh 'npm --version'
       }
     }
 
@@ -20,35 +27,13 @@ pipeline {
       parallel {
         stage('Deliver') {
           steps {
-            sh '''tee kill.sh <<EOF
-#!/bin/bash
-set -euo pipefail
-pwd
-rm -rf ../jenkins_multi-branch-1
-EOF
-
-echo "Running kill.sh"
-
-chmod +x kill.sh
-./kill.sh
-'''
+            sh 'echo "Deliver"'
             input '(Click "Proceed" to continue)'
           }
         }
 
         stage('Prod') {
           steps {
-            sh '''tee kill.sh <<EOF
-#!/bin/bash
-set -euo pipefail
-
-rm -rf ../jenkins_multi-branch-1/sqs-autoscaler-controller
-docker images
-
-EOF
-
-chmod +x kill.sh
-./kill.sh'''
             sh '''tee deliver.sh <<EOF
 #!/bin/bash
 set -euo pipefail
