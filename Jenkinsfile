@@ -27,26 +27,7 @@ pipeline {
       parallel {
         stage('Deliver') {
           steps {
-            sh '''
-apt-get update -y &&  apt-get install tree -y
-tree -L 4
-tee deliver.sh <<EOF
-#!/bin/bash
-set -euo pipefail
-
-echo "Cloning"
-git clone https://github.com/ankitjain28may/scraping-nodejs.git
-cd scraping-nodejs
-tree -L 4
-
-EOF
-
-echo "Running deliver.sh"
-
-chmod +x deliver.sh
-./deliver.sh
-
-tee kill.sh <<EOF
+            sh '''tee kill.sh <<EOF
 #!/bin/bash
 set -euo pipefail
 pwd
@@ -64,6 +45,17 @@ chmod +x kill.sh
 
         stage('Prod') {
           steps {
+            sh '''tee kill.sh <<EOF
+#!/bin/bash
+set -euo pipefail
+
+rm -rf sqs-autoscaler-controller
+docker images
+
+EOF
+
+chmod +x kill.sh
+./kill.sh'''
             sh '''tee deliver.sh <<EOF
 #!/bin/bash
 set -euo pipefail
