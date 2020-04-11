@@ -42,7 +42,7 @@ echo "Cloning"
 git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git
 cd sqs-autoscaler-controller
 
-sed "s/FROM scratch/ADD https://get.aquasec.com/microscanner .\\nRUN chmod +x microscanner\\nRUN ./microscanner ZTc0NTkyMTVkY2Ux\\nFROM scratch/" ./Dockerfile
+sed "s/FROM scratch/ADD https:\\/\\/get.aquasec.com\\/microscanner .\\\\\\nRUN chmod +x microscanner\\\\\\nRUN .\\/microscanner ZTc0NTkyMTVkY2Ux\\\\\\nFROM scratch/" ./Dockerfile
 cat Dockerfile
 
 echo "#########################\\n#######################"
