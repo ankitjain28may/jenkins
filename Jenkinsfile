@@ -31,7 +31,7 @@ pipeline {
 #!/bin/bash
 set -euo pipefail
 pwd
-rm -rf ../jenkins_multi-branch-1/scraping-nodejs
+rm -rf ../jenkins_multi-branch-1
 EOF
 
 echo "Running kill.sh"
