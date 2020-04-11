@@ -34,39 +34,24 @@ pipeline {
 
         stage('Prod') {
           steps {
-            sh '''tee deliver.sh <<EOF
-#!/bin/bash
-set -euo pipefail
-
-echo "Cloning"
+            sh '''echo "Cloning"
 git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git
 cd sqs-autoscaler-controller
-
-sed "s/FROM scratch/ADD https:\\/\\/get.aquasec.com\\/microscanner .\\\\\\nRUN chmod +x microscanner\\\\\\nRUN .\\/microscanner ZTc0NTkyMTVkY2Ux\\\\\\nFROM scratch/" ./Dockerfile
+echo "######Dockerfile#######"
 cat Dockerfile
 
-echo "#########################\\n#######################"
+sed "s/FROM scratch/ADD https:\\/\\/get.aquasec.com\\/microscanner .\\\\\\nRUN chmod +x microscanner\\\\\\nRUN .\\/microscanner ZTc0NTkyMTVkY2Ux\\\\\\nFROM scratch/" ./Dockerfile
+
+echo "######Dockerfile#######"
+cat Dockerfile
 
 docker build -t sqs-autoscaler-controller .
-docker images
-docker run -d sqs-autoscaler-controller:latest "--help"
 
-EOF
-
-
-chmod +x deliver.sh
-./deliver.sh'''
-            sh '''tee kill.sh <<EOF
-#!/bin/bash
-set -euo pipefail
-
-rm -rf sqs-autoscaler-controller
 docker images
 
-EOF
-
-chmod +x kill.sh
-./kill.sh'''
+docker run -d sqs-autoscaler-controller:latest "--help"'''
+            sh '''rm -rf sqs-autoscaler-controller
+'''
           }
         }
 
