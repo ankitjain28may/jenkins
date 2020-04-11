@@ -70,7 +70,7 @@ chmod +x kill.sh
 set -euo pipefail
 
 echo "Cloning"
-https://github.com/ankitjain28may/sqs-autoscaler-controller.git -b k8s-v1.16
+git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git
 cd sqs-autoscaler-controller
 docker build -t sqs-autoscaler-controller .
 docker images
