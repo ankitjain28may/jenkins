@@ -37,7 +37,6 @@ set -euo pipefail
 echo "Cloning"
 git clone https://github.com/ankitjain28may/scraping-nodejs.git
 cd scraping-nodejs
-npm install
 tree -L 4
 
 EOF
