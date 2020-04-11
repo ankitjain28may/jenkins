@@ -24,7 +24,8 @@ pipeline {
 
     stage('Deliver') {
       steps {
-        sh '''apt-get update -y && apt-get install tree -y
+        sh '''
+sudo apt-get update -y && sudo apt-get install tree -y
 
 tee deliver.sh <<EOF
 #!/bin/bash
