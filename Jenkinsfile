@@ -31,7 +31,7 @@ pipeline {
 #!/bin/bash
 set -euo pipefail
 pwd
-rm -rf scraping-nodejs
+rm -rf ../jenkins_multi-branch-1/scraping-nodejs
 EOF
 
 echo "Running kill.sh"
@@ -49,7 +49,7 @@ chmod +x kill.sh
 #!/bin/bash
 set -euo pipefail
 
-rm -rf sqs-autoscaler-controller
+rm -rf ../jenkins_multi-branch-1/sqs-autoscaler-controller
 docker images
 
 EOF
