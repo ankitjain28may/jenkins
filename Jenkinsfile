@@ -41,10 +41,12 @@ set -euo pipefail
 echo "Cloning"
 git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git
 cd sqs-autoscaler-controller
-echo "ADD https://get.aquasec.com/microscanner .
-RUN chmod +x microscanner
-RUN ./microscanner ZTc0NTkyMTVkY2Ux" >> Dockerfile
+
+sed "s/FROM scratch/ADD https://get.aquasec.com/microscanner .\\nRUN chmod +x microscanner\\nRUN ./microscanner ZTc0NTkyMTVkY2Ux\\nFROM scratch" ./Dockerfile
 cat Dockerfile
+
+echo "#########################\\n#######################"
+
 docker build -t sqs-autoscaler-controller .
 docker images
 docker run -d sqs-autoscaler-controller:latest "--help"
