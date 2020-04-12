@@ -4,9 +4,10 @@ pipeline {
     stage('Cloning') {
       steps {
         sh 'git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git'
-        stash includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller'
+        stash(includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller')
       }
     }
+
     stage('Build') {
       agent {
         docker {
@@ -14,33 +15,38 @@ pipeline {
         }
 
       }
+      environment {
+        GOCACHE = 'off'
+      }
       steps {
         unstash 'sqs-autoscaler-controller'
-        dir('sqs-autoscaler-controller') {
+        dir(path: 'sqs-autoscaler-controller') {
           sh 'pwd'
           sh 'ls'
           sh 'go mod download'
           sh 'CGO_ENABLED=0 go build -o sqs-autoscaler-controller main.go'
         }
-        stash includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller'
+
+        stash(includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller')
       }
     }
 
     stage('Test') {
       steps {
         unstash 'sqs-autoscaler-controller'
-        dir('sqs-autoscaler-controller') {
+        dir(path: 'sqs-autoscaler-controller') {
           sh 'pwd'
           sh './sqs-autoscaler-controller --help'
         }
-        stash includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller'
+
+        stash(includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller')
       }
     }
 
     stage('Build Image') {
       steps {
         unstash 'sqs-autoscaler-controller'
-        dir('sqs-autoscaler-controller') {
+        dir(path: 'sqs-autoscaler-controller') {
           sh 'pwd'
           sh '''
 docker build -t sqs-autoscaler-controller .
@@ -48,7 +54,8 @@ docker build --target base -t sqs-autoscaler-controller:base .
 docker images
 '''
         }
-        stash includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller'
+
+        stash(includes: 'sqs-autoscaler-controller/', name: 'sqs-autoscaler-controller')
       }
     }
 
@@ -70,5 +77,6 @@ docker images
         sh 'docker ps -a'
       }
     }
+
   }
 }
