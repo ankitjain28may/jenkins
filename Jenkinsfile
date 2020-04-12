@@ -40,11 +40,11 @@ cd sqs-autoscaler-controller
 echo "######Dockerfile#######"
 
 docker build -t sqs-autoscaler-controller .
-
+docker build --target base -t sqs-autoscaler-controller:base .
 docker images
 
 docker run -d sqs-autoscaler-controller:latest "--help"'''
-            aquaMicroscanner(imageName: 'sqs-autoscaler-controller', outputFormat: 'json', notCompliesCmd: 'exit 1', onDisallowed: 'fail')
+            aquaMicroscanner(imageName: 'sqs-autoscaler-controller:base', outputFormat: 'json', notCompliesCmd: 'exit 1', onDisallowed: 'fail')
             sh '''rm -rf sqs-autoscaler-controller
 '''
           }
