@@ -21,8 +21,6 @@ pipeline {
       steps {
         unstash 'sqs-autoscaler-controller'
         dir(path: 'sqs-autoscaler-controller') {
-          sh 'pwd'
-          sh 'ls'
           sh 'go mod download'
           sh 'CGO_ENABLED=0 go build -o sqs-autoscaler-controller main.go'
         }
@@ -35,7 +33,6 @@ pipeline {
       steps {
         unstash 'sqs-autoscaler-controller'
         dir(path: 'sqs-autoscaler-controller') {
-          sh 'pwd'
           sh './sqs-autoscaler-controller --help'
         }
 
@@ -47,7 +44,6 @@ pipeline {
       steps {
         unstash 'sqs-autoscaler-controller'
         dir(path: 'sqs-autoscaler-controller') {
-          sh 'pwd'
           sh '''
 docker build -t sqs-autoscaler-controller .
 docker build --target base -t sqs-autoscaler-controller:base .
