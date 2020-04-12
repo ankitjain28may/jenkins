@@ -16,12 +16,9 @@ pipeline {
       steps {
         dir('sqs-autoscaler-controller') {
           sh 'pwd'
-          sh '''
-pwd
-ls
-go mod download
-CGO_ENABLED=0 go build -o sqs-autoscaler-controller main.go
-'''
+          sh 'ls'
+          sh 'go mod download'
+          sh 'CGO_ENABLED=0 go build -o sqs-autoscaler-controller main.go'
         }
       }
     }
