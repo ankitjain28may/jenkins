@@ -16,7 +16,7 @@ pipeline {
 
       }
       environment {
-        GOCACHE = 'off'
+        XDG_CACHE_HOME = '/tmp/.cache'
       }
       steps {
         unstash 'sqs-autoscaler-controller'
