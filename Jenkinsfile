@@ -1,57 +1,66 @@
 pipeline {
   agent any
   stages {
+    stage('Cloning') {
+      steps {
+        sh 'git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git'
+        dir('sqs-autoscaler-controller') {
+          sh 'pwd'
+        }
+        sh 'pwd'
+      }
+    }
     stage('Build') {
       agent {
         docker {
-          image 'node:latest'
-          args '-p 3000:3000'
+          image 'golang:1.14.0-alpine3.11'
         }
 
       }
       steps {
-        sh 'npm --version'
+        sh '''
+go mod download
+CGO_ENABLED=0 go build -o sqs-autoscaler-controller main.go
+'''
       }
     }
 
     stage('Test') {
-      environment {
-        CI = 'testing'
-      }
       steps {
-        sh 'echo "Testing"'
+        sh './sqs-autoscaler-controller --help'
       }
     }
 
-    stage('Deliver') {
-      parallel {
-        stage('Deliver') {
-          steps {
-            sh 'echo "Deliver"'
-            input '(Click "Proceed" to continue)'
-          }
-        }
-
-        stage('Prod') {
-          steps {
-            sh '''echo "Cloning"
-git clone -b k8s-v1.16 https://github.com/ankitjain28may/sqs-autoscaler-controller.git
-cd sqs-autoscaler-controller
-echo "######Dockerfile#######"
-
+    stage('Build Image') {
+      steps {
+        sh '''
 docker build -t sqs-autoscaler-controller .
 docker build --target base -t sqs-autoscaler-controller:base .
 docker images
-
-docker run -d sqs-autoscaler-controller:latest "--help"'''
-            aquaMicroscanner(imageName: 'sqs-autoscaler-controller:base', outputFormat: 'json', notCompliesCmd: 'exit 1', onDisallowed: 'fail')
-            sh '''rm -rf sqs-autoscaler-controller
 '''
-          }
-        }
-
       }
     }
 
+    stage('Aqua Scanner') {
+      steps {
+        aquaMicroscanner(imageName: 'sqs-autoscaler-controller:base', outputFormat: 'json', notCompliesCmd: 'exit 1', onDisallowed: 'fail')
+      }
+    }
+
+    stage('Running container') {
+      steps {
+        sh 'docker run --rm sqs-autoscaler-controller:latest "--help"'
+      }
+    }
+
+    stage('Clean Up') {
+      steps {
+        dir('../') {
+          sh 'pwd'
+        }
+        sh 'rm -rf sqs-autoscaler-controller'
+        sh 'docker ps -a'
+      }
+    }
   }
 }
